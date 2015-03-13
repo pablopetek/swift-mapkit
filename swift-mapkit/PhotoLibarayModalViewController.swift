@@ -10,8 +10,9 @@ import Foundation
 import UIKit
 import CoreLocation
 import MapKit
+import Parse
 
-class PhotoLibraryModalViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
+class PhotoLibraryModalViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate   {
 
     @IBOutlet var btnCancel: UIBarButtonItem!
     @IBOutlet var txtDescription: UITextView!
@@ -21,6 +22,8 @@ class PhotoLibraryModalViewController: UIViewController, UITextViewDelegate, UIT
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var btnLibrary: UIButton!
     @IBOutlet var txtTitle: UITextField!
+    @IBOutlet var indActivity: UIActivityIndicatorView!
+    @IBOutlet var indActivityBackgroundView: UIView!
     
     let textViewPlaceholder:String = "And dont't skimp on the details!"
     var latitude:CLLocationDegrees!
@@ -30,9 +33,13 @@ class PhotoLibraryModalViewController: UIViewController, UITextViewDelegate, UIT
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        btnDone.enabled = false
+        self.indActivity.hidden=true
+        self.indActivityBackgroundView.hidden=true
+        self.indActivityBackgroundView.opaque = true
+        var bgColor = UIColor.whiteColor()
+        self.indActivityBackgroundView.backgroundColor = bgColor.colorWithAlphaComponent(0.7)
+        self.btnDone.enabled = false
         self.txtDescription.delegate = self
-        
         
         //add border to textview
         var borderColor : UIColor = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
@@ -53,6 +60,19 @@ class PhotoLibraryModalViewController: UIViewController, UITextViewDelegate, UIT
         self.lblLatitude.text = String(format: "%f", latitude)
         self.lblLongitude.text = String(format: "%f", longitude)
         
+//        //Parse
+//        var testObject = PFObject(className:"TestObject")
+//        testObject["foo"] = "bar"
+//        
+//        testObject.saveInBackgroundWithBlock({
+//            (success: Bool!, error: NSError!) -> Void in
+//            if ((success) != nil && success == true) {
+//                println("Object created with id: \(testObject?.objectId)")
+//            } else {
+//                println("%@", error)
+//            }
+//        })
+
     }
     
     @IBAction func btnCancel_pressed(sender: AnyObject) {
@@ -66,6 +86,29 @@ class PhotoLibraryModalViewController: UIViewController, UITextViewDelegate, UIT
         self.presentViewController(photoPicker, animated: true, completion: {})
         
     }
+    @IBAction func txtTitle_onChanged(sender: AnyObject) {
+        checkUpdateDone()
+    }
+    @IBAction func btnDone_pressed(sender: AnyObject) {
+        // Responsible for saving stuff to Parse
+        
+        // --- show activity indicator
+        self.view.bringSubviewToFront(indActivityBackgroundView)
+        self.view.bringSubviewToFront(indActivity)
+        self.indActivity.hidden = false
+        self.indActivityBackgroundView.hidden = false
+        self.indActivity.startAnimating()
+        
+        // --- save
+        
+        
+        // --- add annotation to map
+        
+
+        // --- hide modal
+        self.dismissViewControllerAnimated(true, completion: {})
+    }
+    
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         self.imageView.image = info[UIImagePickerControllerOriginalImage] as? UIImage
@@ -74,14 +117,11 @@ class PhotoLibraryModalViewController: UIViewController, UITextViewDelegate, UIT
     }
     
     func checkUpdateDone(){
-self.btnDone.enabled = (countElements(txtDescription.text) > 0) && !txtTitle.text.isEmpty && (imageView.image != nil)
-        
+        self.btnDone.enabled = (countElements(txtDescription.text) > 0) && !txtTitle.text.isEmpty && (imageView.image != nil)
     }
     
     
-    @IBAction func txtTitle_onChanged(sender: AnyObject) {
-        checkUpdateDone()
-    }
+    
     
     // Create placeholder-like interaction for text view by showing/hiding a label
     func textViewDidChange(textView: UITextView) {

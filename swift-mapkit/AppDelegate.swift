@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+
+        // Identifying users
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        
+        if userDefaults.objectForKey("ApplicationUniqueIdentifier") == nil {
+            let UUID = NSUUID().UUIDString
+            userDefaults.setObject(UUID, forKey: "ApplicationUniqueIdentifier")
+            userDefaults.synchronize()
+        }
+        
+        // Parse
+        // Initialize Parse.
+        Parse.setApplicationId("Cs5lDo8YXcVenvFKnoiNZO46L584P6dQzvUCsiOw", clientKey: "NjWXuNY59QklaR6Xz5S6P7VlzQjhhXBI5bOwgsCi")
+
         return true
     }
 
@@ -41,6 +56,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    
+    
+    // ---
+    
+    
 }
 
