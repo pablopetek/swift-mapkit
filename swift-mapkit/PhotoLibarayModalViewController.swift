@@ -74,14 +74,13 @@ class PhotoLibraryModalViewController: UIViewController, UITextViewDelegate, UIT
     }
     
     func checkUpdateDone(){
-
-        self.btnDone.enabled = (countElements(txtDescription.text) > 0) && (countElements(txtTitle.text) > 0) && (imageView.image != nil)
+self.btnDone.enabled = (countElements(txtDescription.text) > 0) && !txtTitle.text.isEmpty && (imageView.image != nil)
+        
     }
     
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        println(countElements(textField.text))
-        checkUpdateDone();
-        return true
+    
+    @IBAction func txtTitle_onChanged(sender: AnyObject) {
+        checkUpdateDone()
     }
     
     // Create placeholder-like interaction for text view by showing/hiding a label
