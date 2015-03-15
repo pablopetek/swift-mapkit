@@ -173,7 +173,7 @@ class HomeVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
             imageView.image = momentAnnotation.image;
             imageView.layer.masksToBounds = true
             anView.leftCalloutAccessoryView = imageView
-            anView.rightCalloutAccessoryView = UIButton.buttonWithType(.DetailDisclosure) as UIButton
+            //anView.rightCalloutAccessoryView = UIButton.buttonWithType(.DetailDisclosure) as UIButton
             
             // x,y values set to ensure image is properly aligned for tap recongition
             var smallImageView = UIImageView(frame: CGRectMake(-15, -15, 30, 30))
